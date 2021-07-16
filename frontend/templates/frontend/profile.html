@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ profile.user.username }}'s Profile{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 card text-center">
+            <div class="card-header">
+                {{ profile.user.first_name|capfirst }} {{ profile.user.last_name|capfirst }}
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ profile.user.username }}</h5>
+                <p class="card-text">{{ profile.bio }}</p>
+            </div>
+            <div class="card-footer text-muted">
+                Date Joined - {{ profile.user.date_joined }}
+            </div>
+        </div>
+    </div>
+    <div class="row my-2 justify-content-center">
+        {% for post in posts %}
+            <div class="col-8">
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-text">{{ post.body }}</p> 
+                        <p class="card-text">{{ post.date }}</p>              
+                    </div>
+                    <div class="card-footer">
+                        <p class="card-text">Posted By: {{ post.author.username }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
