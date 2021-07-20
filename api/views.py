@@ -43,8 +43,8 @@ class PostListCreateView(generics.ListCreateAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 
-    def get(self, request):
-        posts = Post.objects.all()     
+    def get(self, request, pk=None):
+        posts = Post.objects.all().order_by('-date')     
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
@@ -55,6 +55,21 @@ class PostListCreateView(generics.ListCreateAPIView):
             return Response(status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class PostUpdateDeleteView(generics.GenericAPIView, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, mixins.DestroyModelMixin):
+    lookup_field = 'id'
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    
+    def get(self, request, id=None):
+        print(self.queryset[id+1].author)
+        return self.retrieve(request)
+
+    def put(self, request, id=None):     
+        if request.user == self.queryset[id+1].author:
+            return self.update(request, id)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 class PostByCategoryView(generics.ListAPIView):
     serializer_class = PostSerializer
